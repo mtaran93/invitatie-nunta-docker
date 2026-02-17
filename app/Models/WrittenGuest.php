@@ -14,5 +14,7 @@ class WrittenGuest extends Model
         'answer',
         'persons',
         'children',
+        'menu_1',
+        'menu_2',
     ];
 }

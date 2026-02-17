@@ -21,6 +21,8 @@ class WrittenGuestController extends Controller
             'persons' => $validated['attendance'] === 'alone' ? 1 : 2,
             'children' => $validated['kids'] === 'noKids' ? false : true,
             'answer' => $validated['answer'],
+            'menu_1' => $validated['menu1'],
+            'menu_2' => $validated['menu2'],
         ]);
 
         return response()->json([

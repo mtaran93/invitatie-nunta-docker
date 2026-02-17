@@ -24,65 +24,47 @@
             font-style: normal;
         }
 
-        .font-wedding {
-            font-family: 'Wedding', sans-serif;
-        }
-
-        .font-ovo {
-            font-family: 'Ovo', sans-serif;
-        }
-
-        .font-body {
-            font-family: "Open Sans", sans-serif;
-        }
-
-        .bg-cream {
-            background-color: #f5f1e8;
-        }
-
-        .text-burgundy {
-            color: #7d2e3d;
-        }
-
-        .border-burgundy {
-            border-color: #7d2e3d;
-        }
-
-        .bg-burgundy {
-            background-color: #7d2e3d;
-        }
-
-        .text-cream {
-            color: #f5f1e8;
-        }
-
-        .border-burgundy {
-            border-color: #7d2e3d;
-        }
+        .font-wedding { font-family: 'Wedding', sans-serif; }
+        .font-ovo { font-family: 'Ovo', sans-serif; }
+        .font-body { font-family: "Open Sans", sans-serif; }
+        .bg-cream { background-color: #f5f1e8; }
+        .text-burgundy { color: #7d2e3d; }
+        .border-burgundy { border-color: #7d2e3d; }
+        .bg-burgundy { background-color: #7d2e3d; }
+        .text-cream { color: #f5f1e8; }
 
         body {
             background: linear-gradient(135deg, #f5f1e8 0%, #ede8dc 100%);
+        }
+
+        #menuOptions {
+            display: none;
+            animation: fadeSlideIn 0.3s ease forwards;
+        }
+
+        #menuOptions.visible {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body class="font-body bg-cream min-h-screen flex items-center justify-center p-4">
 <div class="max-w-md w-full bg-cream rounded-t-full shadow-2xl p-8 md:p-12 relative overflow-hidden" style="background-image: url({{ asset('images/background_2.jpg') }})">
-    <!-- Circular Border -->
     <div class="absolute inset-4 border-2 border-burgundy rounded-t-full opacity-10 pointer-events-none"></div>
 
-
-    <!-- Names -->
     <div class="text-center mt-25 mb-5">
         <h1 class="text-burgundy text-4xl md:text-5xl mb-4 font-wedding">Patricia & Mihai</h1>
         <p class="text-burgundy text-base font-light">Alături de familiile și nașii noștri</p>
     </div>
 
-    <!-- Parents Names -->
     <div class="text-center mb-5">
         <p class="text-burgundy text-2xl font-wedding">Irina si Razvan Vilceanu</p>
     </div>
 
-    <!-- Invitation Text -->
     <div class="text-center mb-5">
         <p class="text-burgundy text-sm md:text-base font-light leading-relaxed">
             Vă invităm să fiți alături de noi<br>
@@ -90,14 +72,11 @@
         </p>
     </div>
 
-    <!-- Date -->
     <div class="text-center mb-5">
         <p class="text-burgundy text-3xl md:text-4xl font-ovo">23 MAI 2026</p>
     </div>
 
-    <!-- Event Details -->
     <div class="grid grid-cols-2 gap-6 mb-8">
-        <!-- Church -->
         <div class="text-center">
             <a target="_blank" href="https://maps.app.goo.gl/f5GB6mqZPFH3Vcmd8">
                 <div class="mb-3">
@@ -109,7 +88,6 @@
             <p class="text-burgundy text-xs font-semibold">ora 16:00</p>
         </div>
 
-        <!-- Reception -->
         <div class="text-center">
             <a target="_blank" href="https://maps.app.goo.gl/TRrR4aAA2frgMyZu7">
                 <div class="mb-3">
@@ -123,7 +101,6 @@
         </div>
     </div>
 
-    <!-- Waiting Text -->
     <div class="text-center mb-6">
         <p class="font-wedding text-burgundy text-3xl md:text-4xl">Va asteptam cu drag!</p>
     </div>
@@ -131,7 +108,6 @@
     <div class="text-center border-t-2 border-burgundy pt-6">
         <p class="text-burgundy text-sm md:text-sm mb-4">Vă rugăm să ne confirmați prezența până la data de 1 mai prin formularul de mai jos sau telefonic</p>
 
-        <!-- Yes/No Buttons -->
         <div id="yesNoButtons" class="justify-center mb-6">
             <button type="button" onclick="showRSVPForm()" class="w-full bg-burgundy text-cream px-8 py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-md">
                 Da, voi fi alături
@@ -141,11 +117,9 @@
             </button>
         </div>
 
-        <!-- RSVP Form (hidden initially) -->
         <div id="rsvpForm" class="hidden mb-6 border-t-2 border-burgundy">
             <p class="text-burgundy text-sm md:text-sm mb-4 mt-3">Ne face plăcere să vă avem alături</p>
 
-            <!-- Name Input -->
             <div class="mb-6">
                 <input
                     type="text"
@@ -155,7 +129,6 @@
                 />
             </div>
 
-            <!-- Alone/Accompanied Buttons -->
             <div class="mb-4">
                 <p class="text-burgundy text-sm mb-2">Cum veți participa?</p>
                 <div class="flex gap-4 justify-center">
@@ -168,7 +141,37 @@
                 </div>
             </div>
 
-            <!-- With Kids/No Kids Buttons -->
+            <!-- Menu Options - shown when 'Singur(ă)' or 'Însoțit(ă)' is selected -->
+            <div id="menuOptions" class="mb-4">
+                <p class="text-burgundy text-sm mb-2">Preferință meniu:</p>
+
+                <!-- First row -->
+                <div class="flex gap-2 justify-center mb-2">
+                    <button onclick="selectOption('menuStandard1')" id="menuStandard1Btn" class="flex-1 border-2 border-burgundy text-burgundy px-3 py-2 rounded-lg font-semibold hover:bg-burgundy hover:text-cream transition-colors text-xs">
+                        Standard
+                    </button>
+                    <button onclick="selectOption('menuVegetarian1')" id="menuVegetarian1Btn" class="flex-1 border-2 border-burgundy text-burgundy px-3 py-2 rounded-lg font-semibold hover:bg-burgundy hover:text-cream transition-colors text-xs">
+                        Vegetarian
+                    </button>
+                    <button onclick="selectOption('menuFaraGluten1')" id="menuFaraGluten1Btn" class="flex-1 border-2 border-burgundy text-burgundy px-3 py-2 rounded-lg font-semibold hover:bg-burgundy hover:text-cream transition-colors text-xs">
+                        Fără Gluten
+                    </button>
+                </div>
+
+                <!-- Second row (hidden by default, shown only for 'accompanied') -->
+                <div id="menuRow2" class="gap-2 justify-center" style="display: none;">
+                    <button onclick="selectOption('menuStandard2')" id="menuStandard2Btn" class="flex-1 border-2 border-burgundy text-burgundy px-3 py-2 rounded-lg font-semibold hover:bg-burgundy hover:text-cream transition-colors text-xs">
+                        Standard
+                    </button>
+                    <button onclick="selectOption('menuVegetarian2')" id="menuVegetarian2Btn" class="flex-1 border-2 border-burgundy text-burgundy px-3 py-2 rounded-lg font-semibold hover:bg-burgundy hover:text-cream transition-colors text-xs">
+                        Vegetarian
+                    </button>
+                    <button onclick="selectOption('menuFaraGluten2')" id="menuFaraGluten2Btn" class="flex-1 border-2 border-burgundy text-burgundy px-3 py-2 rounded-lg font-semibold hover:bg-burgundy hover:text-cream transition-colors text-xs">
+                        Fără Gluten
+                    </button>
+                </div>
+            </div>
+
             <div class="mb-6">
                 <p class="text-burgundy text-sm mb-2">Participare copii:</p>
                 <div class="flex gap-4 justify-center">
@@ -181,7 +184,6 @@
                 </div>
             </div>
 
-            <!-- Submit Button -->
             <button onclick="submitRSVP()" class="w-full bg-burgundy text-cream px-8 py-3 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity shadow-md text-sm">
                 Trimite confirmarea
             </button>
@@ -224,11 +226,13 @@
 <script>
     let selectedOptions = {
         attendance: null,
-        kids: null
+        kids: null,
+        menu1: null,
+        menu2: null
     };
 
     function refresh() {
-        location.reload()
+        location.reload();
     }
 
     function showRSVPForm() {
@@ -243,20 +247,72 @@
 
     function selectOption(option) {
         if (option === 'alone' || option === 'accompanied') {
-            // Clear previous attendance selection
             document.getElementById('aloneBtn').classList.remove('bg-burgundy', 'text-cream');
             document.getElementById('accompaniedBtn').classList.remove('bg-burgundy', 'text-cream');
 
-            // Highlight selected button
             const btn = option === 'alone' ? document.getElementById('aloneBtn') : document.getElementById('accompaniedBtn');
             btn.classList.add('bg-burgundy', 'text-cream');
             selectedOptions.attendance = option;
+
+            // Show menu options for both 'alone' and 'accompanied'
+            const menuOptions = document.getElementById('menuOptions');
+            const menuRow2 = document.getElementById('menuRow2');
+
+            if (option === 'alone') {
+                menuOptions.classList.add('visible');
+                menuRow2.style.display = 'none';
+                // Reset menu2 selection
+                selectedOptions.menu2 = null;
+                ['menuStandard2Btn', 'menuVegetarian2Btn', 'menuFaraGluten2Btn'].forEach(id => {
+                    document.getElementById(id).classList.remove('bg-burgundy', 'text-cream');
+                });
+            } else if (option === 'accompanied') {
+                menuOptions.classList.add('visible');
+                menuRow2.style.display = 'flex';
+            } else {
+                menuOptions.classList.remove('visible');
+                menuRow2.style.display = 'none';
+                // Reset all menu selections
+                selectedOptions.menu1 = null;
+                selectedOptions.menu2 = null;
+                ['menuStandard1Btn', 'menuVegetarian1Btn', 'menuFaraGluten1Btn',
+                    'menuStandard2Btn', 'menuVegetarian2Btn', 'menuFaraGluten2Btn'].forEach(id => {
+                    document.getElementById(id).classList.remove('bg-burgundy', 'text-cream');
+                });
+            }
+        } else if (option.startsWith('menu')) {
+            // Handle menu selections - row 1
+            if (option.endsWith('1')) {
+                document.getElementById('menuStandard1Btn').classList.remove('bg-burgundy', 'text-cream');
+                document.getElementById('menuVegetarian1Btn').classList.remove('bg-burgundy', 'text-cream');
+                document.getElementById('menuFaraGluten1Btn').classList.remove('bg-burgundy', 'text-cream');
+
+                const btnMap1 = {
+                    'menuStandard1': 'menuStandard1Btn',
+                    'menuVegetarian1': 'menuVegetarian1Btn',
+                    'menuFaraGluten1': 'menuFaraGluten1Btn'
+                };
+                document.getElementById(btnMap1[option]).classList.add('bg-burgundy', 'text-cream');
+                selectedOptions.menu1 = option.replace('1', '');
+            }
+            // Handle menu selections - row 2
+            else if (option.endsWith('2')) {
+                document.getElementById('menuStandard2Btn').classList.remove('bg-burgundy', 'text-cream');
+                document.getElementById('menuVegetarian2Btn').classList.remove('bg-burgundy', 'text-cream');
+                document.getElementById('menuFaraGluten2Btn').classList.remove('bg-burgundy', 'text-cream');
+
+                const btnMap2 = {
+                    'menuStandard2': 'menuStandard2Btn',
+                    'menuVegetarian2': 'menuVegetarian2Btn',
+                    'menuFaraGluten2': 'menuFaraGluten2Btn'
+                };
+                document.getElementById(btnMap2[option]).classList.add('bg-burgundy', 'text-cream');
+                selectedOptions.menu2 = option.replace('2', '');
+            }
         } else {
-            // Clear previous kids selection
             document.getElementById('withKidsBtn').classList.remove('bg-burgundy', 'text-cream');
             document.getElementById('noKidsBtn').classList.remove('bg-burgundy', 'text-cream');
 
-            // Highlight selected button
             const btn = option === 'withKids' ? document.getElementById('withKidsBtn') : document.getElementById('noKidsBtn');
             btn.classList.add('bg-burgundy', 'text-cream');
             selectedOptions.kids = option;
@@ -276,6 +332,22 @@
             return;
         }
 
+        if (selectedOptions.attendance === 'alone') {
+            if (!selectedOptions.menu1) {
+                alert('Vă rugăm să selectați preferința de meniu.');
+                return;
+            }
+        } else if (selectedOptions.attendance === 'accompanied') {
+            if (!selectedOptions.menu1) {
+                alert('Vă rugăm să selectați preferința de meniu pentru prima persoană.');
+                return;
+            }
+            if (!selectedOptions.menu2) {
+                alert('Vă rugăm să selectați preferința de meniu pentru a doua persoană.');
+                return;
+            }
+        }
+
         if (!selectedOptions.kids) {
             alert('Vă rugăm să selectați opțiunea pentru copii.');
             return;
@@ -287,8 +359,10 @@
             name: name,
             attendance: selectedOptions.attendance,
             kids: selectedOptions.kids,
+            menu1: selectedOptions.menu1,
+            menu2: selectedOptions.menu2,
             answer: true,
-        }
+        };
 
         handleRequest(data, csrfToken);
     }
@@ -307,8 +381,10 @@
             name: name,
             attendance: '0',
             kids: '0',
+            menu1: null,
+            menu2: null,
             answer: false,
-        }
+        };
 
         handleRequest(data, csrfToken);
     }
@@ -326,10 +402,9 @@
             if (response.ok) {
                 return response.json();
             }
-
             throw await response.json();
         }).then(response => {
-            alert('Vă multumim pentru confirmarea prezenței. Vă asteptăm cu drag!')
+            alert('Vă multumim pentru confirmarea prezenței. Vă asteptăm cu drag!');
             location.reload();
         }).catch(error => {
             if (error.errors) {
@@ -337,9 +412,9 @@
                     alert(error.errors[field]);
                 }
             } else {
-                alert('Vă rugăm incercați mai târziu!');
+                alert(error.message);
             }
-        })
+        });
     }
 </script>
 </body>

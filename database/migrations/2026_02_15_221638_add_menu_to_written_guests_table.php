@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('written_guests', function (Blueprint $table) {
-            $table->string('menu')->nullable()->after('children');
+            $table->string('menu_1')->nullable()->after('children');
+            $table->string('menu_2')->nullable()->after('menu_1');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('written_guests', function (Blueprint $table) {
-            $table->dropColumn('menu');
+            $table->dropColumn('menu_1');
+            $table->dropColumn('menu_2');
         });
     }
 };

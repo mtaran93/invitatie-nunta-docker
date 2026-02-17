@@ -20,6 +20,8 @@ class WrittenGuestRequest extends FormRequest
             'attendance' => 'required|string',
             'kids' => 'required|string',
             'answer' => 'required|boolean',
+            'menu1' => 'sometimes|string|nullable',
+            'menu2' => 'sometimes|string|nullable',
         ];
     }
     public function messages(): array

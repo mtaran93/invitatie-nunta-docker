@@ -67,11 +67,6 @@ RUN composer run-script post-autoload-dump || true
 # Build frontend assets
 RUN npm run build
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
-
 # PHP-FPM config
 COPY docker/php/local.ini /usr/local/etc/php/conf.d/local.ini
 

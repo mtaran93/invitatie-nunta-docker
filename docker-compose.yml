@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: "${UID}:${GID}"
     container_name: invitatie_nunta_app
     restart: unless-stopped
     working_dir: /var/www/html
@@ -49,20 +48,20 @@ services:
     ports:
       - "${DB_PORT_FORWARD:-3306}:3306"
     environment:
-        MYSQL_DATABASE: ${DB_DATABASE}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-        MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+        TZ: 'UTC'
+        MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_ROOT_HOST: '%'
+        MYSQL_DATABASE: '${DB_DATABASE}'
+        MYSQL_USER: '${DB_USERNAME}'
+        MYSQL_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      - vendor:/var/www/html/vendor
-      - node_modules:/var/www/html/node_modules
-      - public_build:/var/www/html/public/build
     networks:
       - laravel
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root_secret}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USERNAME}", "-p${DB_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -77,7 +76,7 @@ volumes:
   vendor:
     driver: local
   node_modules:
-      driver: local
+    driver: local
 
 # ─── Networks ─────────────────────────────────────────────────────
 networks:
