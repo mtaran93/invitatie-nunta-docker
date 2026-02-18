@@ -17,13 +17,7 @@ class WrittenGuestController extends Controller
     {
         $validated = $request->validated();
 
-        if (! $validated['answer']) {
-            return response()->json([
-                'message' => 'fail',
-            ]);
-        }
-
-        $writtenGuest = WrittenGuest::create([
+        WrittenGuest::create([
             'name' => $validated['name'],
             'persons' => $validated['attendance'] === 'alone' ? 1 : 2,
             'children' => $validated['kids'] === 'noKids' ? false : true,
@@ -31,6 +25,12 @@ class WrittenGuestController extends Controller
             'menu_1' => Menu::label($validated['menu1']),
             'menu_2' => Menu::label($validated['menu2']),
         ]);
+
+        if (! $validated['answer']) {
+            return response()->json([
+                'message' => 'fail',
+            ]);
+        }
 
         return response()->json([
             'message' => 'success',
