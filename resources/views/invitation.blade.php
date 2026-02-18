@@ -113,12 +113,12 @@
         </div>
     </div>
 
-    <div class="text-center mb-6">
+    <div class="text-center mb-6" id="footer_1">
         <p class="font-wedding text-burgundy text-3xl md:text-4xl">Va asteptam cu drag!</p>
     </div>
 
-    <div class="text-center border-t-2 border-burgundy pt-6">
-        <p class="text-burgundy text-sm md:text-sm mb-4">Vă rugăm să ne confirmați prezența până la data de 1 mai prin formularul de mai jos sau telefonic</p>
+    <div class="text-center border-t-2 border-burgundy pt-6" id="first_form">
+        <p class="text-burgundy text-sm md:text-sm mb-4" id="presence">Vă rugăm să ne confirmați prezența până la data de 1 mai prin formularul de mai jos sau telefonic</p>
 
         <div id="yesNoButtons" class="justify-center mb-6">
             <button type="button" onclick="showRSVPForm()" class="w-full bg-burgundy text-cream px-8 py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-md">
@@ -204,9 +204,7 @@
         </div>
 
         <!-- Negative RSVP Form -->
-        <div id="rsvpFormNegative" class="hidden mb-6 border-t-2 border-burgundy">
-            <p class="text-burgundy text-sm md:text-sm mb-4 mt-3">Vă mulțumim pentru răspuns. Ne pare rău că nu veți putea fi alături de noi.</p>
-
+        <div id="rsvpFormNegative" class="hidden mb-6 border-burgundy">
             <div class="mb-6">
                 <input
                     type="text"
@@ -227,7 +225,7 @@
 
 
         <div id="thankYouMessage" class="hidden mb-6 border-t-2 border-burgundy pt-6">
-            <p class="font-wedding text-burgundy text-3xl mb-2 mt-2" id="thankYouText">Mulțumim pentru răspuns!</p>
+            <p class="font-wedding text-burgundy text-3xl mb-2 mt-2" id="thankYouText">Multumim pentru raspuns!</p>
             <p class="text-burgundy text-sm mt-4" id="responseMessage"></p>
         </div>
 
@@ -264,6 +262,8 @@
     function handleNo() {
         document.getElementById('yesNoButtons').style.display = 'none';
         document.getElementById('rsvpFormNegative').style.display = 'block';
+        document.getElementById('presence').style.display = 'none';
+        document.getElementById('footer_1').style.display = 'none';
     }
 
     function showError(id) {
@@ -278,9 +278,16 @@
         document.getElementById('rsvpForm').style.display = 'none';
         document.getElementById('rsvpFormNegative').style.display = 'none';
         document.getElementById('thankYouMessage').style.display = 'block';
+        document.getElementById('footer_1').style.display = 'none';
         if (value === 'success') {
-            document.getElementById('responseMessage').textContent ='Vă așteptăm cu drag pe 23 Mai 2026.';
+            document.getElementById('responseMessage').textContent ='Vă rugăm să ne confirmați prezența până la data de 1 mai prin formularul de mai jos sau telefonic';
+            document.getElementById('presence').style.display = 'none';
+            document.getElementById('thankYouMessage').classList.remove('border-t-2');
+            document.getElementById('thankYouMessage').classList.remove('pt-6');
         } else if (value === 'fail') {
+            document.getElementById('presence').style.display = 'none';
+            document.getElementById('thankYouMessage').classList.remove('border-t-2');
+            document.getElementById('thankYouMessage').classList.remove('pt-6');
             document.getElementById('responseMessage').textContent ='Ne pare rau ca nu ne puteti onora cu prezenta';
         } else if (value === 'rate_limit_error') {
             document.getElementById('responseMessage').textContent ='Un raspuns a fost deja inregistrat!';
