@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
             \Log::info("The generated rate limit key is: " . md5('answer' . $request->ip()));
             \Log::info('Rate limiter hit by: ' . $request->ip());
 
-            return Limit::perMinutes(30, 1)
+            return Limit::perMinutes(30, 5)
                 ->by($request->ip())
                 ->response(function () {
                     return response()->json([
