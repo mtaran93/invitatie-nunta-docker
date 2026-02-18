@@ -290,6 +290,9 @@
             document.getElementById('thankYouMessage').classList.remove('pt-6');
             document.getElementById('responseMessage').textContent ='Ne pare rau ca nu ne puteti onora cu prezenta';
         } else if (value === 'rate_limit_error') {
+            document.getElementById('presence').style.display = 'none';
+            document.getElementById('thankYouMessage').classList.remove('border-t-2');
+            document.getElementById('thankYouMessage').classList.remove('pt-6');
             document.getElementById('responseMessage').textContent ='Un raspuns a fost deja inregistrat!';
             document.getElementById('thankYouText').style.display = 'none';
         } else {
