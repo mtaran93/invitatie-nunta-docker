@@ -19,7 +19,7 @@ class WrittenGuestController extends Controller
 
         if (! $validated['answer']) {
             return response()->json([
-                'message' => 'Ne pare rau ca nu puteti sa ne onorati cu prezenta!',
+                'message' => 'fail',
             ]);
         }
 
@@ -33,7 +33,7 @@ class WrittenGuestController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Vă multumim pentru confirmarea prezenței. Vă asteptăm cu drag!',
+            'message' => 'success',
         ]);
     }
 }

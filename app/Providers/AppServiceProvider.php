@@ -31,11 +31,11 @@ class AppServiceProvider extends ServiceProvider
             \Log::info("The generated rate limit key is: " . md5('answer' . $request->ip()));
             \Log::info('Rate limiter hit by: ' . $request->ip());
 
-            return Limit::perMinutes(30, 5)
+            return Limit::perMinutes(30, 1)
                 ->by($request->ip())
                 ->response(function () {
                     return response()->json([
-                        'message' => 'Un raspuns a fost trimis deja. Multumim!'
+                        'message' => 'rate limit exceeded',
                     ], 429);
                 });
         });
