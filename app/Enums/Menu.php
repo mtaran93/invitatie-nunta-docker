@@ -13,9 +13,10 @@ enum Menu: string
     public static function label($menu): string
     {
         return match ($menu) {
-            Menu::MenuStandard => 'standard',
-            Menu::MenuVegetarian => 'vegetarian',
-            Menu::menuFaraGluten => 'fara_gluten',
+            Menu::MenuStandard->value => 'standard',
+            Menu::MenuVegetarian->value => 'vegetarian',
+            Menu::menuFaraGluten->value => 'fara_gluten',
+            default => 'empty',
         };
     }
 }

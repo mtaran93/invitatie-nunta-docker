@@ -53,7 +53,17 @@
     </style>
 </head>
 <body class="font-body bg-cream min-h-screen flex items-center justify-center p-4">
-<div class="max-w-md w-full bg-cream rounded-t-full shadow-2xl p-8 md:p-12 relative overflow-hidden" style="background-image: url({{ asset('images/background_2.jpg') }})">
+    <div id="popup-overlay" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4 text-center">
+            <p id="popup-message" class="text-burgundy text-lg mb-6"></p>
+            <button onclick="closePopup()" class="bg-burgundy text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                OK
+            </button>
+        </div>
+    </div>
+    <div class="max-w-md w-full bg-cream rounded-t-full shadow-2xl p-8 md:p-12 relative overflow-hidden" style="background-image: url({{ asset('images/background_2.jpg') }})">
+
+
     <div class="absolute inset-4 border-2 border-burgundy rounded-t-full opacity-10 pointer-events-none"></div>
 
     <div class="text-center mt-25 mb-5">
@@ -323,33 +333,33 @@
         const name = document.getElementById('guestName').value;
 
         if (!name.trim()) {
-            alert('Vă rugăm să introduceți numele dumneavoastră.');
+            showPopup('Vă rugăm să introduceți numele dumneavoastră.');
             return;
         }
 
         if (!selectedOptions.attendance) {
-            alert('Vă rugăm să selectați dacă veniți singur(ă) sau însoțit(ă).');
+            showPopup('Vă rugăm să selectați dacă veniți singur(ă) sau însoțit(ă).');
             return;
         }
 
         if (selectedOptions.attendance === 'alone') {
             if (!selectedOptions.menu1) {
-                alert('Vă rugăm să selectați preferința de meniu.');
+                showPopup('Vă rugăm să selectați preferința de meniu.');
                 return;
             }
         } else if (selectedOptions.attendance === 'accompanied') {
             if (!selectedOptions.menu1) {
-                alert('Vă rugăm să selectați preferința de meniu pentru prima persoană.');
+                showPopup('Vă rugăm să selectați preferința de meniu pentru prima persoană.');
                 return;
             }
             if (!selectedOptions.menu2) {
-                alert('Vă rugăm să selectați preferința de meniu pentru a doua persoană.');
+                showPopup('Vă rugăm să selectați preferința de meniu pentru a doua persoană.');
                 return;
             }
         }
 
         if (!selectedOptions.kids) {
-            alert('Vă rugăm să selectați opțiunea pentru copii.');
+            showPopup('Vă rugăm să selectați opțiunea pentru copii.');
             return;
         }
 
@@ -371,7 +381,7 @@
         const name = document.getElementById('guestNameNegative').value;
 
         if (!name.trim()) {
-            alert('Vă rugăm să introduceți numele dumneavoastră.');
+            showPopup('Vă rugăm să introduceți numele dumneavoastră.');
             return;
         }
 
@@ -399,23 +409,39 @@
             },
             body: JSON.stringify(data)
         }).then(async (response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw await response.json();
-        }).then(response => {
-            alert('Vă multumim pentru confirmarea prezenței. Vă asteptăm cu drag!');
-            location.reload();
+            const json = await response.json();
+
+            if (response.ok) return json;
+
+            throw json;
+        }).then(json => {
+            showPopup(json.message);
+            // location.reload();
         }).catch(error => {
             if (error.errors) {
-                for (const field in error.errors) {
-                    alert(error.errors[field]);
-                }
+                const first = Object.values(error.errors)[0][0];
+                showPopup(first);
+            } else if (error.message) {
+                showPopup(error.message);
             } else {
-                alert(error.message);
+                showPopup('Va rugam incercati mai tarziu!');
             }
         });
     }
+
+    function showPopup(message) {
+        document.getElementById('popup-message').textContent = message;
+        document.getElementById('popup-overlay').classList.remove('hidden');
+    }
+
+    function closePopup() {
+        document.getElementById('popup-overlay').classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closePopup();
+    });
+
 </script>
 </body>
 </html>

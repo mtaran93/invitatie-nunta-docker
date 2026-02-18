@@ -21,6 +21,8 @@ class WrittenGuestsTable
                 IconColumn::make('answer')->label('Raspuns')->boolean()->sortable(),
                 TextColumn::make('persons')->label('Adulti')->sortable(),
                 IconColumn::make('children')->label('Copii')->boolean()->sortable(),
+                TextColumn::make('menu_1')->label('Menu 1'),
+                TextColumn::make('menu_2')->label('Menu 2'),
                 TextColumn::make('created_at')->dateTime()->label('Data confirmarii')->sortable(),
             ])
             ->filters([
