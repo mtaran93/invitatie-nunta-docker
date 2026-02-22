@@ -225,8 +225,8 @@
 
 
         <div id="thankYouMessage" class="hidden mb-6 border-t-2 border-burgundy pt-6">
-            <p class="font-wedding text-burgundy text-3xl mb-2 mt-2" id="thankYouText">Multumim pentru raspuns!</p>
-            <p class="text-burgundy text-sm mt-4" id="responseMessage"></p>
+            <p class="font-wedding text-burgundy text-3xl mb-2 mt-2" id="thankYouText">Ne vedem pe ringul de dans!</p>
+            <p class="text-burgundy text-sm md:text-base font-light leading-relaxed" id="responseMessage"></p>
         </div>
 
         <div class="space-y-1">
@@ -277,10 +277,9 @@
     function showThankYou(value) {
         document.getElementById('rsvpForm').style.display = 'none';
         document.getElementById('rsvpFormNegative').style.display = 'none';
-        document.getElementById('thankYouMessage').style.display = 'block';
         document.getElementById('footer_1').style.display = 'none';
+        document.getElementById('thankYouMessage').style.display = 'block';
         if (value === 'success') {
-            document.getElementById('responseMessage').textContent ='Vă rugăm să ne confirmați prezența până la data de 1 mai prin formularul de mai jos sau telefonic';
             document.getElementById('presence').style.display = 'none';
             document.getElementById('thankYouMessage').classList.remove('border-t-2');
             document.getElementById('thankYouMessage').classList.remove('pt-6');
@@ -288,15 +287,16 @@
             document.getElementById('presence').style.display = 'none';
             document.getElementById('thankYouMessage').classList.remove('border-t-2');
             document.getElementById('thankYouMessage').classList.remove('pt-6');
-            document.getElementById('responseMessage').textContent ='Ne pare rau ca nu ne puteti onora cu prezenta';
+            document.getElementById('responseMessage').textContent ='Ne pare rău că nu ne puteți onora cu prezența!';
+            document.getElementById('thankYouText').style.display = 'none';
         } else if (value === 'rate_limit_error') {
             document.getElementById('presence').style.display = 'none';
             document.getElementById('thankYouMessage').classList.remove('border-t-2');
             document.getElementById('thankYouMessage').classList.remove('pt-6');
-            document.getElementById('responseMessage').textContent ='Un raspuns a fost deja inregistrat!';
+            document.getElementById('responseMessage').textContent ='Un răspuns a fost deja înregistrat!';
             document.getElementById('thankYouText').style.display = 'none';
         } else {
-            document.getElementById('responseMessage').textContent ='A aparut o eroare, incercati mai tarziu!';
+            document.getElementById('responseMessage').textContent ='A apărut o eroare, încercați mai târziu!';
             document.getElementById('thankYouText').style.display = 'none';
         }
     }
