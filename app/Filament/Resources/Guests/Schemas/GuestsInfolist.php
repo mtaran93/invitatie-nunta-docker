@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\WrittenGuests\Schemas;
+namespace App\Filament\Resources\Guests\Schemas;
 
 use Filament\Schemas\Schema;
 
-class WrittenGuestsForm
+class GuestsInfolist
 {
     public static function configure(Schema $schema): Schema
     {
