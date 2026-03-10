@@ -20,6 +20,10 @@ class WrittenGuestsResource extends Resource
 {
     protected static ?string $model = WrittenGuest::class;
 
+    protected static ?string $navigationLabel = 'Invitatii';
+    protected static ?string $modelLabel = 'Invitatie';
+    protected static ?string $pluralModelLabel = 'Invitatii';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'Written Guests';
