@@ -155,6 +155,12 @@
             color: #6b7280;
             margin: 0;
         }
+        .assigned-count {
+            font-weight: 500;
+            color: #9ca3af;
+            margin-left: 4px;
+            font-variant-numeric: tabular-nums;
+        }
         .btn {
             font: inherit;
             border: 1px solid #d1d5db;
@@ -492,9 +498,16 @@
         </div>
     </div>
 
+    @php
+        $assignedPersons = $tables->sum(fn ($t) => $t->guests->sum('person_number'));
+        $assignedKids = $tables->sum(fn ($t) => $t->guests->sum('kid_number'));
+    @endphp
     <main class="tables-panel">
         <header>
-            <h1>Tables <span id="tables-count" class="tables-count">({{ $tables->count() }})</span></h1>
+            <h1>
+                Tables <span id="tables-count" class="tables-count">({{ $tables->count() }})</span>
+                <span id="assigned-count" class="assigned-count">· {{ $assignedPersons }} persons · {{ $assignedKids }} kids</span>
+            </h1>
             <button id="add-table" class="btn btn-primary" type="button">Add table</button>
         </header>
         <div id="tables-scroll" class="tables-scroll">
@@ -661,6 +674,18 @@
                 kids += parseInt(li.dataset.kidNumber, 10) || 0;
             });
             label.textContent = `${persons} persons · ${kids} kids`;
+            updateAssignedTotals();
+        }
+
+        function updateAssignedTotals() {
+            const el = document.getElementById('assigned-count');
+            if (!el) return;
+            let persons = 0, kids = 0;
+            scroll.querySelectorAll('.table-card .table-guests li[data-guest-id]').forEach(li => {
+                persons += parseInt(li.dataset.personNumber, 10) || 0;
+                kids += parseInt(li.dataset.kidNumber, 10) || 0;
+            });
+            el.textContent = `· ${persons} persons · ${kids} kids`;
         }
 
         function appendGuest(card, guest) {
@@ -729,6 +754,10 @@
                 if (!confirm('Delete this table? Guests will become unassigned.')) return;
                 try {
                     await api(`/tables/${tableId}`, { method: 'DELETE' });
+                    card.querySelectorAll('li[data-guest-id]').forEach(li => {
+                        const guestRow = guestsBody?.querySelector(`tr[data-guest-id="${li.dataset.guestId}"]`);
+                        if (guestRow) guestRow.dataset.assigned = '0';
+                    });
                     card.remove();
                     if (!scroll.querySelector('.table-card')) {
                         const div = document.createElement('div');
@@ -737,6 +766,7 @@
                         scroll.appendChild(div);
                     }
                     updateTablesCount();
+                    updateAssignedTotals();
                 } catch (err) {
                     alert('Failed to delete: ' + err.message);
                 }
