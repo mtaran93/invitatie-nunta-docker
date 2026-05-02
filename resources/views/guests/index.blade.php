@@ -108,6 +108,9 @@
             background: #fff;
             font-size: 13px;
             color: #6b7280;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
         }
         .filter-toggle {
             display: inline-flex;
@@ -117,6 +120,17 @@
             user-select: none;
         }
         #guests-table.unassigned-only tr[data-assigned="1"] { display: none; }
+        #guests-table.confirmed-yes tr:has(.confirm-toggle[data-confirmed="0"]) { display: none; }
+        #guests-table.confirmed-no tr:has(.confirm-toggle[data-confirmed="1"]) { display: none; }
+        #guests-table tr[data-guest-id][data-name-match="0"] { display: none; }
+        .guests-toolbar .search {
+            flex: 1;
+            min-width: 140px;
+            padding: 4px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 13px;
+        }
 
         .tables-panel {
             flex: 1;
@@ -380,9 +394,18 @@
             <button id="add-guest" class="btn btn-primary" type="button">Add guest</button>
         </header>
         <div class="guests-toolbar">
+            <input id="filter-name" class="search" type="search" placeholder="Search by name…" autocomplete="off">
             <label class="filter-toggle">
                 <input id="filter-unassigned" type="checkbox">
                 Only unassigned
+            </label>
+            <label class="filter-toggle">
+                Confirmed
+                <select id="filter-confirmed">
+                    <option value="">All</option>
+                    <option value="1">Da</option>
+                    <option value="0">Nu</option>
+                </select>
             </label>
         </div>
         <div class="guests-scroll">
@@ -471,7 +494,7 @@
 
     <main class="tables-panel">
         <header>
-            <h1>Tables</h1>
+            <h1>Tables <span id="tables-count" class="tables-count">({{ $tables->count() }})</span></h1>
             <button id="add-table" class="btn btn-primary" type="button">Add table</button>
         </header>
         <div id="tables-scroll" class="tables-scroll">
@@ -622,6 +645,13 @@
             }
         }
 
+        function updateTablesCount() {
+            const el = document.getElementById('tables-count');
+            if (!el) return;
+            const n = scroll.querySelectorAll('.table-card').length;
+            el.textContent = `(${n})`;
+        }
+
         function updateGuestCount(card) {
             const label = card.querySelector('.guest-count');
             if (!label) return;
@@ -657,6 +687,7 @@
                 const empty = scroll.querySelector('.tables-empty');
                 if (empty) empty.remove();
                 scroll.appendChild(buildCard(table));
+                updateTablesCount();
             } catch (err) {
                 alert('Failed to add table: ' + err.message);
             }
@@ -705,6 +736,7 @@
                         div.innerHTML = 'No tables yet — click <strong>Add table</strong> to create one.';
                         scroll.appendChild(div);
                     }
+                    updateTablesCount();
                 } catch (err) {
                     alert('Failed to delete: ' + err.message);
                 }
@@ -856,6 +888,22 @@
             guestsTable?.classList.toggle('unassigned-only', filterUnassigned.checked);
         });
 
+        const filterConfirmed = document.getElementById('filter-confirmed');
+        filterConfirmed?.addEventListener('change', () => {
+            guestsTable?.classList.toggle('confirmed-yes', filterConfirmed.value === '1');
+            guestsTable?.classList.toggle('confirmed-no', filterConfirmed.value === '0');
+        });
+
+        const filterName = document.getElementById('filter-name');
+        function applyNameFilter(tr) {
+            const q = (filterName?.value ?? '').trim().toLowerCase();
+            const name = tr.querySelector('td')?.textContent?.toLowerCase() ?? '';
+            tr.dataset.nameMatch = !q || name.includes(q) ? '1' : '0';
+        }
+        filterName?.addEventListener('input', () => {
+            guestsBody?.querySelectorAll('tr[data-guest-id]').forEach(applyNameFilter);
+        });
+
         function buildGuestRow(g) {
             const tr = document.createElement('tr');
             tr.dataset.guestId = g.id;
@@ -892,6 +940,7 @@
             });
             if (next) guestsBody.insertBefore(row, next);
             else guestsBody.appendChild(row);
+            applyNameFilter(row);
         }
 
         const addGuestBtn = document.getElementById('add-guest');
