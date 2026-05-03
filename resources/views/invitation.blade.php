@@ -118,7 +118,7 @@
     </div>
 
     <div class="text-center border-t-2 border-burgundy pt-6" id="first_form">
-        <p class="text-burgundy text-sm md:text-sm mb-4" id="presence">Vă rugăm să ne confirmați prezența până la data de 1 mai prin formularul de mai jos sau telefonic</p>
+        <p class="text-burgundy text-sm md:text-sm mb-4" id="presence">Vă rugăm să ne confirmați prezența până la data de 10 mai prin formularul de mai jos sau telefonic</p>
 
         <div id="yesNoButtons" class="justify-center mb-6">
             <button type="button" onclick="showRSVPForm()" class="w-full bg-burgundy text-cream px-8 py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-md">
