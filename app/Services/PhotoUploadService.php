@@ -13,6 +13,7 @@ class PhotoUploadService
 {
     private const DISK = 'local';
     private const DIRECTORY = 'photos';
+    private const MAX_TOTAL_PHOTOS = 5000;
 
     private const MIME_EXTENSIONS = [
         'image/jpeg' => 'jpg',
@@ -24,6 +25,10 @@ class PhotoUploadService
 
     public function store(UploadedFile $file, string $ip, ?string $userAgent): UploadedPhoto
     {
+        if (UploadedPhoto::count() >= self::MAX_TOTAL_PHOTOS) {
+            throw new RuntimeException('Album capacity reached.');
+        }
+
         $mime = $file->getMimeType();
         if (! isset(self::MIME_EXTENSIONS[$mime])) {
             throw new RuntimeException('Unsupported mime type.');

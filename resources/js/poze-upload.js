@@ -22,6 +22,9 @@ class FileItem {
  * The retry policy is encapsulated here so the queue stays unaware of network details.
  */
 class FileUploader {
+    static MAX_RATE_LIMIT_WAITS = 2;
+    static MAX_RETRY_AFTER_MS = 90_000;
+
     constructor({ url, maxRetries, csrfToken }) {
         this.url = url;
         this.maxRetries = maxRetries;
@@ -30,6 +33,7 @@ class FileUploader {
 
     async upload(item, onProgress) {
         item.attempts = 0;
+        let rateLimitWaits = 0;
 
         while (true) {
             item.attempts += 1;
@@ -37,7 +41,15 @@ class FileUploader {
                 await this.#postOnce(item, onProgress);
                 return;
             } catch (err) {
-                const { retryable, message } = this.#classify(err);
+                const { retryable, message, retryAfterMs } = this.#classify(err);
+
+                if (retryAfterMs !== null && rateLimitWaits < FileUploader.MAX_RATE_LIMIT_WAITS) {
+                    rateLimitWaits += 1;
+                    item.attempts -= 1; // don't count a server-directed wait
+                    await this.#sleep(retryAfterMs);
+                    continue;
+                }
+
                 if (!retryable || item.attempts > this.maxRetries) {
                     const finalErr = new Error(message);
                     finalErr.cause = err;
@@ -64,14 +76,35 @@ class FileUploader {
 
     #classify(err) {
         if (!err.response) {
-            return { retryable: true, message: 'Conexiune întreruptă' };
+            return { retryable: true, message: 'Conexiune întreruptă', retryAfterMs: null };
         }
         const s = err.response.status;
         if (s === 429 || s >= 500) {
-            return { retryable: true, message: `Eroare server (${s})` };
+            return {
+                retryable: true,
+                message: `Eroare server (${s})`,
+                retryAfterMs: s === 429 ? this.#parseRetryAfter(err.response) : null,
+            };
         }
         const msg = err.response.data?.message || `Cerere invalidă (${s})`;
-        return { retryable: false, message: msg };
+        return { retryable: false, message: msg, retryAfterMs: null };
+    }
+
+    #parseRetryAfter(response) {
+        const raw = response.headers?.['retry-after'] ?? response.headers?.get?.('retry-after');
+        if (!raw) return null;
+
+        const seconds = Number(raw);
+        let ms;
+        if (Number.isFinite(seconds)) {
+            ms = seconds * 1000;
+        } else {
+            const when = Date.parse(raw);
+            if (Number.isNaN(when)) return null;
+            ms = when - Date.now();
+        }
+        if (ms <= 0) return 1000;
+        return Math.min(ms, FileUploader.MAX_RETRY_AFTER_MS);
     }
 
     #backoffMs(attempt) {

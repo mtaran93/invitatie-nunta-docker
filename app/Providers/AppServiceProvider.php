@@ -28,13 +28,16 @@ class AppServiceProvider extends ServiceProvider
         }
 
         RateLimiter::for('poze-upload', function (Request $request) {
-            return Limit::perMinute(60)
-                ->by($request->ip())
-                ->response(function () {
-                    return response()->json([
-                        'message' => 'Prea multe încărcări. Încearcă din nou într-un minut.',
-                    ], 429);
-                });
+            $response = function () {
+                return response()->json([
+                    'message' => 'Prea multe încărcări. Încearcă din nou mai târziu.',
+                ], 429);
+            };
+
+            return [
+                Limit::perMinute(21)->by('poze-min:'.$request->ip())->response($response),
+                Limit::perDay(300)->by('poze-day:'.$request->ip())->response($response),
+            ];
         });
 
         RateLimiter::for('answer', function (Request $request) {

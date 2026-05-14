@@ -21,7 +21,7 @@ class UploadPhotoRequest extends FormRequest
                 'file',
                 'mimetypes:image/jpeg,image/png,image/webp,image/heic,image/heif',
                 'max:3072',
-                'dimensions:max_width=8000,max_height=8000',
+                'dimensions:max_width=6000,max_height=6000',
             ],
         ];
     }
