@@ -20,7 +20,7 @@ class UploadPhotoRequest extends FormRequest
                 'required',
                 'file',
                 'mimetypes:image/jpeg,image/png,image/webp,image/heic,image/heif',
-                'max:3072',
+                'max:10240',
                 'dimensions:max_width=6000,max_height=6000',
             ],
         ];
@@ -32,7 +32,7 @@ class UploadPhotoRequest extends FormRequest
             'photo.required' => 'Selectează o fotografie.',
             'photo.file' => 'Fișier invalid.',
             'photo.mimetypes' => 'Format neacceptat. Acceptăm JPG, PNG, WEBP sau HEIC.',
-            'photo.max' => 'Fotografia depășește 3 MB.',
+            'photo.max' => 'Fotografia depășește 10 MB.',
             'photo.dimensions' => 'Rezoluție prea mare.',
         ];
     }

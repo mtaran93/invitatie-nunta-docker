@@ -310,7 +310,7 @@ function validateSelection(files, { maxFiles, maxSize }) {
             return `Format neacceptat: ${f.name}`;
         }
         if (f.size > maxSize) {
-            return `Fișier prea mare (max 3 MB): ${f.name}`;
+            return `Fișier prea mare (max 10 MB): ${f.name}`;
         }
     }
     return null;
