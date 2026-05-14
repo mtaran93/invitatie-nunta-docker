@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class UploadedPhoto extends Model
 {
@@ -28,5 +29,21 @@ class UploadedPhoto extends Model
             'height' => 'integer',
             'status' => 'string',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (UploadedPhoto $photo): void {
+            $disk = Storage::disk($photo->disk);
+
+            if ($photo->path && $disk->exists($photo->path)) {
+                $disk->delete($photo->path);
+            }
+
+            $thumb = 'photos/thumbs/'.$photo->stored_name;
+            if ($disk->exists($thumb)) {
+                $disk->delete($thumb);
+            }
+        });
     }
 }
