@@ -77,6 +77,12 @@
         <p class="text-burgundy text-2xl font-ovo">Albumul nuntii</p>
     </div>
 
+    <div class="text-center mb-6">
+        <p class="text-burgundy text-sm md:text-base font-light leading-relaxed">
+            Alegeti pana la <span class="font-semibold">20 de poze</span> din galerie<br>
+        </p>
+    </div>
+
     <div class="text-center border-t-2 border-burgundy pt-6">
 
         <label for="poze-input"
