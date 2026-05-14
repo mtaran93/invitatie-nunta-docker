@@ -20,9 +20,13 @@ class UploadedPhoto extends Model
         'status',
     ];
 
-    protected $casts = [
-        'size' => 'integer',
-        'width' => 'integer',
-        'height' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'size' => 'integer',
+            'width' => 'integer',
+            'height' => 'integer',
+            'status' => 'string',
+        ];
+    }
 }

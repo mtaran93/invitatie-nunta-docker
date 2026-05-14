@@ -29,6 +29,8 @@ class PhotoUploadController extends Controller
                 $request->userAgent(),
             );
         } catch (RuntimeException $e) {
+            report($e);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Nu am putut salva fotografia. Încearcă din nou.',
