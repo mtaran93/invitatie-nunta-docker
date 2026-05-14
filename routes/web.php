@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\PhotoUploadController;
 use App\Http\Controllers\WrittenGuestController;
+use App\Models\UploadedPhoto;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Invitat;
 use App\Models\WeddingTable;
@@ -15,6 +17,28 @@ Route::get('/poze/upload', [PhotoUploadController::class, 'show'])->name('poze.u
 Route::post('/poze/upload', [PhotoUploadController::class, 'store'])
     ->name('poze.upload.store')
     ->middleware('throttle:poze-upload');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/photos/{photo}/file', function (UploadedPhoto $photo) {
+        $disk = Storage::disk($photo->disk);
+        abort_unless($disk->exists($photo->path), 404);
+
+        return response()->file($disk->path($photo->path), [
+            'Content-Type' => $photo->mime,
+        ]);
+    })->name('admin.photos.file');
+
+    Route::get('/admin/photos/{photo}/thumb', function (UploadedPhoto $photo) {
+        $disk = Storage::disk($photo->disk);
+        $thumb = 'photos/thumbs/'.$photo->stored_name;
+        $path = $disk->exists($thumb) ? $thumb : $photo->path;
+        abort_unless($disk->exists($path), 404);
+
+        return response()->file($disk->path($path), [
+            'Content-Type' => $photo->mime,
+        ]);
+    })->name('admin.photos.thumb');
+});
 
 Route::prefix('mese/config')
     ->name('mese.config.')
