@@ -59,7 +59,7 @@
 <body class="font-body bg-cream min-h-screen flex items-center justify-center p-4"
       data-upload-url="{{ route('poze.upload.store') }}"
       data-max-files="20"
-      data-max-size-bytes="{{ 3 * 1024 * 1024 }}"
+      data-max-size-bytes="{{ 10 * 1024 * 1024 }}"
       data-concurrency="4"
       data-max-retries="2">
 
