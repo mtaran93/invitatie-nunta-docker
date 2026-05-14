@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PhotoUploadController;
 use App\Http\Controllers\WrittenGuestController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -9,6 +10,11 @@ use App\Models\WeddingTable;
 Route::get('/', [WrittenGuestController::class, 'index'])->name('invitation');
 Route::post('/answer', [WrittenGuestController::class, 'store'])->name('answer')
     ->middleware('throttle:answer');;
+
+Route::get('/poze/upload', [PhotoUploadController::class, 'show'])->name('poze.upload');
+Route::post('/poze/upload', [PhotoUploadController::class, 'store'])
+    ->name('poze.upload.store')
+    ->middleware('throttle:poze-upload');
 
 Route::prefix('mese/config')
     ->name('mese.config.')
