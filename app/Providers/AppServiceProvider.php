@@ -27,10 +27,17 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
-        RateLimiter::for('answer', function (Request $request) {
-            \Log::info("The generated rate limit key is: " . md5('answer' . $request->ip()));
-            \Log::info('Rate limiter hit by: ' . $request->ip());
+        RateLimiter::for('poze-upload', function (Request $request) {
+            return Limit::perMinute(60)
+                ->by($request->ip())
+                ->response(function () {
+                    return response()->json([
+                        'message' => 'Prea multe încărcări. Încearcă din nou într-un minut.',
+                    ], 429);
+                });
+        });
 
+        RateLimiter::for('answer', function (Request $request) {
             return Limit::perMinutes(30, 2)
                 ->by($request->ip())
                 ->response(function () {
