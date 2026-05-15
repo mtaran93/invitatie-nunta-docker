@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class InvitatsTable
@@ -14,9 +15,11 @@ class InvitatsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('name', 'asc')
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('person_number')
                     ->numeric()
                     ->sortable(),
@@ -39,7 +42,11 @@ class InvitatsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('confirmed')
+                    ->label('Confirmare')
+                    ->trueLabel('Confirmați')
+                    ->falseLabel('Neconfirmați')
+                    ->placeholder('Toți'),
             ])
             ->recordActions([
                 EditAction::make(),
