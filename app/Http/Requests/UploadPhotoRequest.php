@@ -15,15 +15,19 @@ class UploadPhotoRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'photo' => [
-                'required',
-                'file',
-                'mimetypes:image/jpeg,image/png,image/webp,image/heic,image/heif',
-                'max:10240',
-                'dimensions:max_width=6000,max_height=6000',
-            ],
+        $rules = [
+            'required',
+            'file',
+            'mimetypes:image/jpeg,image/png,image/webp,image/heic,image/heif',
+            'max:10240',
         ];
+
+        $mime = $this->file('photo')?->getMimeType();
+        if ($mime !== null && ! in_array($mime, ['image/heic', 'image/heif'], true)) {
+            $rules[] = 'dimensions:max_width=6000,max_height=6000';
+        }
+
+        return ['photo' => $rules];
     }
 
     public function messages(): array
