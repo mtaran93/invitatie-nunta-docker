@@ -21,6 +21,10 @@ class ListInvitats extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('mese_config')
+                ->label('Configurare mese')
+                ->icon('heroicon-o-cog-6-tooth')
+                ->url('/mese/config'),
             ImportAction::make()
                 ->importer(InvitatImporter::class),
             Action::make('export')

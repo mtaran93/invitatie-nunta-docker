@@ -397,7 +397,10 @@
     <aside class="guests-panel">
         <header>
             <h1>Guests</h1>
-            <button id="add-guest" class="btn btn-primary" type="button">Add guest</button>
+            <div style="display:flex; gap:8px;">
+                <a href="/admin" class="btn" style="text-decoration:none;">← Admin</a>
+                <button id="add-guest" class="btn btn-primary" type="button">Add guest</button>
+            </div>
         </header>
         <div class="guests-toolbar">
             <input id="filter-name" class="search" type="search" placeholder="Search by name…" autocomplete="off">
