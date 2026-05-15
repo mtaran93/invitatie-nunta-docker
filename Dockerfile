@@ -10,10 +10,23 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpq-dev \
     libicu-dev \
+    libmagickwand-dev \
+    libheif-dev \
+    imagemagick \
     zip \
     unzip \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Allow ImageMagick to read HEIC (Debian disables HEIC/HEIF by default in policy.xml)
+RUN for f in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do \
+        if [ -f "$f" ]; then \
+            sed -i 's@rights="none" pattern="HEIC"@rights="read|write" pattern="HEIC"@' "$f"; \
+            sed -i 's@rights="none" pattern="HEIF"@rights="read|write" pattern="HEIF"@' "$f"; \
+        fi; \
+    done
 
 # Install Node.js 22 (required by laravel-vite-plugin ^2 and vite ^7)
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \

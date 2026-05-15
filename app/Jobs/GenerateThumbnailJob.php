@@ -39,9 +39,15 @@ class GenerateThumbnailJob implements ShouldQueue
             return;
         }
 
+        if (in_array($photo->mime, ['image/heic', 'image/heif'], true)) {
+            $absolute = $this->convertHeicToJpeg($photo, $absolute, $disk);
+            if (! $absolute) {
+                return;
+            }
+        }
+
         $info = @getimagesize($absolute);
         if (! is_array($info)) {
-            // HEIC or unreadable by GD — record nothing.
             return;
         }
 
@@ -77,6 +83,41 @@ class GenerateThumbnailJob implements ShouldQueue
 
         imagedestroy($src);
         imagedestroy($dst);
+    }
+
+    private function convertHeicToJpeg(UploadedPhoto $photo, string $absolute, $disk): ?string
+    {
+        if (! extension_loaded('imagick')) {
+            return null;
+        }
+
+        try {
+            $im = new \Imagick($absolute);
+            $im->setImageFormat('jpeg');
+            $im->setImageCompressionQuality(90);
+            $im->stripImage();
+
+            $newStoredName = pathinfo($photo->stored_name, PATHINFO_FILENAME).'.jpg';
+            $newPath = pathinfo($photo->path, PATHINFO_DIRNAME).'/'.$newStoredName;
+            $newAbsolute = $disk->path($newPath);
+
+            $im->writeImage($newAbsolute);
+            $im->clear();
+            $im->destroy();
+        } catch (\ImagickException $e) {
+            report($e);
+            return null;
+        }
+
+        @unlink($absolute);
+
+        $photo->update([
+            'stored_name' => $newStoredName,
+            'path' => $newPath,
+            'mime' => 'image/jpeg',
+        ]);
+
+        return $newAbsolute;
     }
 
     private function createImage(string $path, int $type): \GdImage|false
