@@ -47,6 +47,7 @@ class ListInvitats extends ListRecords
     {
         return [
             'name' => 'Nume',
+            'name_initial' => 'Inițială',
             'person_number' => 'Adulți',
             'kid_number' => 'Copii',
             'total_guests' => 'Total invitați',
@@ -75,6 +76,7 @@ class ListInvitats extends ListRecords
             $query->lazy(500)->each(function (Invitat $invitat) use ($writer, $columns): void {
                 $values = array_map(function (string $c) use ($invitat) {
                     return match ($c) {
+                        'name_initial' => mb_strtoupper(mb_substr((string) $invitat->name, 0, 1)),
                         'total_guests' => (int) $invitat->person_number + (int) $invitat->kid_number,
                         'accommodation', 'confirmed' => $invitat->{$c} ? 'Da' : 'Nu',
                         'created_at', 'updated_at' => $invitat->{$c}?->format('Y-m-d H:i:s'),
