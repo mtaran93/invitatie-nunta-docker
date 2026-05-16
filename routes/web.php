@@ -51,7 +51,7 @@ Route::prefix('mese/config')
 
             $tables = WeddingTable::with(['guests' => function ($q) {
                 $q->orderBy('name')->select('id', 'name', 'person_number', 'kid_number', 'wedding_table_id');
-            }])->orderBy('number')->get(['id', 'number', 'finished']);
+            }])->orderBy('number')->get(['id', 'number', 'finished', 'used']);
 
             return view('guests.index', compact('guests', 'tables'));
         });
@@ -105,6 +105,7 @@ Route::prefix('mese/config')
                 'id' => $table->id,
                 'number' => $table->number,
                 'finished' => $table->finished,
+                'used' => $table->used,
                 'guests' => [],
             ]);
         });
@@ -113,6 +114,7 @@ Route::prefix('mese/config')
             $data = $request->validate([
                 'number' => ['sometimes', 'integer', 'min:1', 'unique:wedding_tables,number,'.$table->id],
                 'finished' => ['sometimes', 'boolean'],
+                'used' => ['sometimes', 'boolean'],
             ]);
 
             if (empty($data)) {
@@ -123,12 +125,17 @@ Route::prefix('mese/config')
                 abort(409, 'Table is finished. Edit it first to change the number.');
             }
 
+            if (array_key_exists('finished', $data) && $data['finished'] === false) {
+                $data['used'] = false;
+            }
+
             $table->fill($data)->save();
 
             return response()->json([
                 'id' => $table->id,
                 'number' => $table->number,
                 'finished' => $table->finished,
+                'used' => $table->used,
             ]);
         });
 
