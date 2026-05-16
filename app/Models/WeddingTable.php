@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WeddingTable extends Model
 {
-    protected $fillable = ['number', 'finished'];
+    protected $fillable = ['number', 'finished', 'used'];
 
     protected $casts = [
         'number' => 'integer',
         'finished' => 'boolean',
+        'used' => 'boolean',
     ];
 
     public function guests(): HasMany

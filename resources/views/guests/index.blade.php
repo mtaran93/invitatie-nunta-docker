@@ -238,6 +238,12 @@
         .table-card .finish-table { color: #166534; border-color: #bbf7d0; background: #f0fdf4; }
         .table-card .finish-table:hover { background: #dcfce7; }
         .table-card .edit-table { color: #1f2328; }
+        .table-card.used { background: #fee2e2; border-color: #fecaca; }
+        .table-card.used header,
+        .table-card.used .search-row { border-bottom-color: #fecaca; }
+        .table-card .used-table { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
+        .table-card .used-table:hover { background: #fee2e2; }
+        .table-card.used .used-table { background: #fecaca; }
 
         .search-row {
             position: relative;
@@ -519,7 +525,7 @@
                     $persons = $table->guests->sum('person_number');
                     $kids = $table->guests->sum('kid_number');
                 @endphp
-                <article class="table-card{{ $table->finished ? ' finished' : '' }}" data-table-id="{{ $table->id }}" data-finished="{{ $table->finished ? '1' : '0' }}">
+                <article class="table-card{{ $table->finished ? ' finished' : '' }}{{ $table->used ? ' used' : '' }}" data-table-id="{{ $table->id }}" data-finished="{{ $table->finished ? '1' : '0' }}" data-used="{{ $table->used ? '1' : '0' }}">
                     <header>
                         <span class="label">Table</span>
                         <input class="table-number" type="number" min="1" value="{{ $table->number }}"{{ $table->finished ? ' disabled' : '' }}>
@@ -527,6 +533,7 @@
                         <span class="spacer"></span>
                         @if ($table->finished)
                             <button class="btn edit-table" type="button">Edit</button>
+                            <button class="btn used-table" type="button">{{ $table->used ? 'Used ✓' : 'Used' }}</button>
                         @else
                             <button class="btn finish-table" type="button">Finish</button>
                             <button class="btn btn-danger delete-table" type="button">Delete</button>
@@ -583,7 +590,9 @@
             card.className = 'table-card';
             card.dataset.tableId = table.id;
             card.dataset.finished = table.finished ? '1' : '0';
+            card.dataset.used = table.used ? '1' : '0';
             if (table.finished) card.classList.add('finished');
+            if (table.used) card.classList.add('used');
             const actions = table.finished
                 ? `<button class="btn edit-table" type="button">Edit</button>`
                 : `<button class="btn finish-table" type="button">Finish</button>
@@ -607,7 +616,7 @@
             return card;
         }
 
-        function applyFinishedState(card, finished) {
+        function applyFinishedState(card, finished, used) {
             card.dataset.finished = finished ? '1' : '0';
             card.classList.toggle('finished', !!finished);
             const numberInput = card.querySelector('.table-number');
@@ -616,6 +625,7 @@
             const existingFinish = header.querySelector('.finish-table');
             const existingEdit = header.querySelector('.edit-table');
             const existingDelete = header.querySelector('.delete-table');
+            const existingUsed = header.querySelector('.used-table');
             if (finished) {
                 existingFinish?.remove();
                 existingDelete?.remove();
@@ -626,8 +636,22 @@
                     btn.textContent = 'Edit';
                     header.appendChild(btn);
                 }
+                if (!existingUsed) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn used-table';
+                    btn.type = 'button';
+                    btn.textContent = used ? 'Used ✓' : 'Used';
+                    header.appendChild(btn);
+                } else {
+                    existingUsed.textContent = used ? 'Used ✓' : 'Used';
+                }
+                card.dataset.used = used ? '1' : '0';
+                card.classList.toggle('used', !!used);
             } else {
                 existingEdit?.remove();
+                existingUsed?.remove();
+                card.dataset.used = '0';
+                card.classList.remove('used');
                 if (!existingFinish) {
                     const btn = document.createElement('button');
                     btn.className = 'btn finish-table';
@@ -732,7 +756,7 @@
                         method: 'PATCH',
                         body: JSON.stringify({ finished: true }),
                     });
-                    applyFinishedState(card, !!updated.finished);
+                    applyFinishedState(card, !!updated.finished, !!updated.used);
                 } catch (err) {
                     alert('Failed to finish: ' + err.message);
                 }
@@ -745,9 +769,25 @@
                         method: 'PATCH',
                         body: JSON.stringify({ finished: false }),
                     });
-                    applyFinishedState(card, !!updated.finished);
+                    applyFinishedState(card, !!updated.finished, !!updated.used);
                 } catch (err) {
                     alert('Failed to edit: ' + err.message);
+                }
+                return;
+            }
+
+            if (e.target.classList.contains('used-table')) {
+                const next = card.dataset.used !== '1';
+                try {
+                    const updated = await api(`/tables/${tableId}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ used: next }),
+                    });
+                    card.dataset.used = updated.used ? '1' : '0';
+                    card.classList.toggle('used', !!updated.used);
+                    e.target.textContent = updated.used ? 'Used ✓' : 'Used';
+                } catch (err) {
+                    alert('Failed to update: ' + err.message);
                 }
                 return;
             }
