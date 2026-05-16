@@ -80,6 +80,7 @@ class ListInvitats extends ListRecords
                         'total_guests' => (int) $invitat->person_number + (int) $invitat->kid_number,
                         'accommodation', 'confirmed' => $invitat->{$c} ? 'Da' : 'Nu',
                         'created_at', 'updated_at' => $invitat->{$c}?->format('Y-m-d H:i:s'),
+                        'wedding_table_id' => $invitat->weddingTable?->number,
                         default => $invitat->{$c},
                     };
                 }, $columns);
