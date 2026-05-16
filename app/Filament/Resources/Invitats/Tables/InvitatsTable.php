@@ -30,7 +30,7 @@ class InvitatsTable
                     ->boolean(),
                 IconColumn::make('confirmed')
                     ->boolean(),
-                TextColumn::make('weddingTable.id')
+                TextColumn::make('weddingTable.number')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
