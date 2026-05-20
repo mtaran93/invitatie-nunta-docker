@@ -88,6 +88,31 @@
         </div>
     </div>
 
+    <div class="mb-4 text-center">
+        <ul class="inline-block text-center text-burgundy text-sm md:text-base font-light leading-relaxed space-y-3 bg-cream/80 rounded-lg p-5 list-none">
+            <li>
+                <a target="_blank" href="https://maps.app.goo.gl/f5GB6mqZPFH3Vcmd8" class="underline hover:opacity-80">
+                    <span class="font-semibold">Locație Biserică</span>
+                </a>
+            </li>
+            <li>
+                <a target="_blank" href="https://maps.app.goo.gl/TRrR4aAA2frgMyZu7" class="underline hover:opacity-80">
+                    <span class="font-semibold">Locație Sală</span> — Grand Ball Room
+                </a>
+            </li>
+            <li>
+                <a target="_blank" href="https://maps.app.goo.gl/t3jMV4u7YqZEwxAB7" class="underline hover:opacity-80">
+                    <span class="font-semibold">Locație Cazare</span>
+                </a>
+            </li>
+            <li>
+                <span class="font-semibold">Taxi:</span> HD 76 LOM
+                <span class="block text-xs opacity-80">Il găsiți în parcare între orele 02:30-05:30</span>
+                <span class="block text-xs opacity-80">VW Passat negru, scrie Uber pe el</span>
+            </li>
+        </ul>
+    </div>
+
 </div>
 </body>
 </html>
