@@ -39,15 +39,5 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perDay(300)->by('poze-day:'.$request->ip())->response($response),
             ];
         });
-
-        RateLimiter::for('answer', function (Request $request) {
-            return Limit::perMinutes(30, 2)
-                ->by($request->ip())
-                ->response(function () {
-                    return response()->json([
-                        'message' => 'rate limit exceeded',
-                    ], 429);
-                });
-        });
     }
 }

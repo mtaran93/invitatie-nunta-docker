@@ -10,8 +10,6 @@ use App\Models\Invitat;
 use App\Models\WeddingTable;
 
 Route::get('/', [WrittenGuestController::class, 'index'])->name('invitation');
-Route::post('/answer', [WrittenGuestController::class, 'store'])->name('answer')
-    ->middleware('throttle:answer');;
 
 Route::get('/poze/upload', [PhotoUploadController::class, 'show'])->name('poze.upload');
 Route::post('/poze/upload', [PhotoUploadController::class, 'store'])
