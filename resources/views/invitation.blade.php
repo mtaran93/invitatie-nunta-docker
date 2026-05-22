@@ -95,20 +95,26 @@
                     <span class="font-semibold">Locație Biserică</span>
                 </a>
             </li>
-            <li>
+            <li class="mt-2">
                 <a target="_blank" href="https://maps.app.goo.gl/TRrR4aAA2frgMyZu7" class="underline hover:opacity-80">
                     <span class="font-semibold">Locație Sală</span> — Grand Ball Room
                 </a>
             </li>
-            <li>
+            <li class="mt-2">
                 <a target="_blank" href="https://maps.app.goo.gl/t3jMV4u7YqZEwxAB7" class="underline hover:opacity-80">
                     <span class="font-semibold">Locație Cazare</span>
+                    <span class="block text-xs opacity-80">Duminica checkout ora 13:00</span>
                 </a>
             </li>
-            <li>
-                <span class="font-semibold">Taxi:</span> HD 76 LOM
-                <span class="block text-xs opacity-80">Il găsiți în parcare între orele 02:30-05:30</span>
-                <span class="block text-xs opacity-80">VW Passat negru, scrie Uber pe el</span>
+            <li class="mt-2">
+                <span class="font-semibold">Taxi:</span> HD 76 LOM - 0723 030 219
+                <span class="block text-xs opacity-80">VW Passat negru, inscriptie Uber</span>
+
+                <span class="font-semibold">Taxi:</span> HD 17 ASD - 0767 347 588
+                <span class="block text-xs opacity-80">Audi A3 gri, inscriptie Uber</span>
+
+                <span class="block text-xs opacity-80 mt-1">Ii găsiți în parcare între orele 02:30-05:30</span>
+
             </li>
         </ul>
     </div>
